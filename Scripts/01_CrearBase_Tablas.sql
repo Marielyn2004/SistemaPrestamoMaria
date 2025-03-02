@@ -19,6 +19,17 @@ FechaCreacion datetime default getdate()
 )
 
 go
+create table Garante(
+IdGarante int primary key identity,
+NroDocumento varchar(50),
+Nombre varchar(50),
+Apellido varchar(50),
+Correo  varchar(50),
+Telefono  varchar(50),
+FechaCreacion datetime default getdate()
+)
+
+go
 
 create table Moneda(
 IdMoneda int primary key identity,
@@ -29,9 +40,11 @@ FechaCreacion datetime default getdate()
 
 go
 
+
 create table Prestamo(
 IdPrestamo int primary key identity,
 IdCliente int,
+IdGarante int,
 IdMoneda int,
 FechaInicioPago date,
 MontoPrestamo decimal(10,2),
@@ -71,11 +84,12 @@ FechaCreacion datetime default getdate()
 go
 
 insert into Moneda(Nombre,Simbolo) values
-('Soles','S/.'),
-('Dolares','$')
+('Pesos','$')
 
 go
 
 insert into Usuario(NombreCompleto,Correo,Clave) values
-('Administrador','Admin@gmail.com','12345')
+('Maria Jimenez','2022-0384@uteco.edu.do','12345')
 
+INSERT INTO Garante (NroDocumento, Nombre, Apellido, Correo, Telefono)
+VALUES ('12345678', 'Juan', 'Pérez', 'juan.perez@email.com', '809-123-4567');

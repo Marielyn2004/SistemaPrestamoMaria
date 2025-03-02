@@ -369,3 +369,111 @@ select
 end
 
 GO
+
+-- PROCEDMIENTOS PARA Garante
+
+-- Procedimiento para obtener la lista de garantes
+create procedure sp_listaGarante
+as
+begin
+    select 
+        IdGarante, 
+        NroDocumento, 
+        Nombre, 
+        Apellido, 
+        Correo, 
+        Telefono, 
+        convert(char(10), FechaCreacion, 103)[FechaCreacion]
+    from Garante
+end
+GO
+
+-- Procedimiento para obtener un garante por su número de documento
+create procedure sp_obtenerGarante(
+    @NroDocumento varchar(50)
+)
+as
+begin
+    select 
+        IdGarante, 
+        NroDocumento, 
+        Nombre, 
+        Apellido, 
+        Correo, 
+        Telefono, 
+        convert(char(10), FechaCreacion, 103)[FechaCreacion]
+    from Garante
+    where NroDocumento = @NroDocumento
+end
+GO
+
+-- Procedimiento para crear un nuevo garante
+create procedure sp_crearGarante(
+    @NroDocumento varchar(50),
+    @Nombre varchar(50),
+    @Apellido varchar(50),
+    @Correo varchar(50),
+    @Telefono varchar(50),
+    @msgError varchar(100) OUTPUT
+)
+as
+begin
+    set @msgError = ''
+    if(not exists(select * from Garante where NroDocumento = @NroDocumento))
+    begin
+        insert into Garante (NroDocumento, Nombre, Apellido, Correo, Telefono) 
+        values (@NroDocumento, @Nombre, @Apellido, @Correo, @Telefono)
+        set @msgError = 'Garante creado exitosamente'
+    end
+    else
+        set @msgError = 'El Garante ya existe'
+end
+GO
+
+-- Procedimiento para editar un garante existente
+create procedure sp_editarGarante(
+    @IdGarante int,
+    @NroDocumento varchar(50),
+    @Nombre varchar(50),
+    @Apellido varchar(50),
+    @Correo varchar(50),
+    @Telefono varchar(50),
+    @msgError varchar(100) OUTPUT
+)
+as
+begin
+    set @msgError = ''
+    if(not exists(select * from Garante where NroDocumento = @NroDocumento and IdGarante != @IdGarante))
+    begin
+        update Garante 
+        set 
+            NroDocumento = @NroDocumento, 
+            Nombre = @Nombre, 
+            Apellido = @Apellido, 
+            Correo = @Correo, 
+            Telefono = @Telefono
+        where IdGarante = @IdGarante
+        set @msgError = 'Garante actualizado exitosamente'
+    end
+    else
+        set @msgError = 'El Garante ya existe'
+end
+GO
+
+-- Procedimiento para eliminar un garante
+create procedure sp_eliminarGarante(
+    @IdGarante int,
+    @msgError varchar(100) OUTPUT
+)
+as
+begin
+    set @msgError = ''
+    if(not exists(select IdPrestamo from Prestamo where IdGarante = @IdGarante))
+    begin
+        delete from Garante where IdGarante = @IdGarante
+        set @msgError = 'Garante eliminado exitosamente'
+    end
+    else
+        set @msgError = 'El Garante tiene historial de préstamo, no se puede eliminar'
+end
+GO

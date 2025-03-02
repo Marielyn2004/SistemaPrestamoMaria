@@ -8,6 +8,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.Configure<ConnectionStrings>(builder.Configuration.GetSection("ConnectionStrings"));
 builder.Services.AddSingleton<MonedaData>();
 builder.Services.AddSingleton<ClienteData>();
+builder.Services.AddSingleton<GaranteData>();
 builder.Services.AddSingleton<PrestamoData>();
 builder.Services.AddSingleton<ResumenData>();
 builder.Services.AddSingleton<UsuarioData>();
